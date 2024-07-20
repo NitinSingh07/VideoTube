@@ -24,16 +24,15 @@ app.use(express.static("public"));
 mongoose
   .connect(process.env.MONGO_URI, {})
   .then(() => {
-    console.log("Connected to MongoDB!!" );
+    console.log("Connected to MongoDB!!");
   })
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);
   });
 
 // Routes
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+import userRouter from "./routes/user.route.js";
+app.use("/api/v1/users", userRouter);
 
 // Start server
 const PORT = process.env.PORT || 3000;
