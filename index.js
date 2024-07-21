@@ -3,8 +3,16 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 
-dotenv.config();
+dotenv.config({
+  path: "./.env",
+});
+// console.log("Cloudinary Config:", {
+//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//   api_key: process.env.CLOUDINARY_API_KEY,
+//   api_secret: process.env.CLOUDINARY_API_SECRET,
+// });
 
 const app = express();
 app.use(
@@ -15,6 +23,7 @@ app.use(
 );
 
 // Middleware
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -32,10 +41,11 @@ mongoose
 
 // Routes
 import userRouter from "./src/routes/user.route.js";
+import { asyncHandler } from "./utils/asyncHandler.js";
 app.use("/api/v1/users", userRouter);
 
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
