@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+// Define user schema
 const userSchema = new Schema(
   {
     username: {
@@ -26,11 +27,11 @@ const userSchema = new Schema(
       index: true,
     },
     avatar: {
-      type: String, // cloudinary image url
+      type: String, // Cloudinary image URL
       required: true,
     },
     coverImage: {
-      type: String, // cloudinary image url
+      type: String, // Cloudinary image URL
     },
     watchHistory: [
       {
@@ -51,6 +52,7 @@ const userSchema = new Schema(
   },
 );
 
+// Pre-save hook to hash the password if modified
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
@@ -58,10 +60,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// Method to check if the provided password is correct
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
+// Method to generate access token
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -76,6 +80,8 @@ userSchema.methods.generateAccessToken = function () {
     },
   );
 };
+
+// Method to generate refresh token
 userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
@@ -88,4 +94,5 @@ userSchema.methods.generateRefreshToken = function () {
   );
 };
 
+// Export the User model
 export const User = mongoose.model("User", userSchema);
